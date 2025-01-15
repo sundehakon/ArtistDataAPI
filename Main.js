@@ -22,4 +22,20 @@ const db = mongoose.connection;
 db.on('error', console.error.bind(console, 'MongoDB connection error:'));
 db.once('open', () => {
     console.log('MongoDB: ✅');
-})
+});
+
+const artistSchema = new mongoose.Schema({
+    name: { type: String, required: true },
+    country: { type: String, required: true },
+    debut: { type: Number, required: true },
+    gender: { type: String, required: true },
+    members: { type: String, required: true },
+    popularity: { type: Number, required: true }
+});
+
+const genreSchema = new mongoose.Schema({
+    name: { type: String, required: true },
+    artists: { type: [artistSchema], default: [] },
+});
+
+const Genre = mongoose.model('Genre', genreSchema)
