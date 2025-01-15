@@ -25,17 +25,42 @@ db.once('open', () => {
 });
 
 const artistSchema = new mongoose.Schema({
-    name: { type: String, required: true },
-    country: { type: String, required: true },
-    debut: { type: Number, required: true },
-    gender: { type: String, required: true },
-    members: { type: String, required: true },
-    popularity: { type: Number, required: true }
+    NAME: { type: String, required: true },
+    COUNTRY: { type: String, required: true },
+    DEBUT: { type: Number, required: true },
+    GENDER: { type: String, required: true },
+    MEMBERS: { type: String, required: true },
+    POPULARITY: { type: Number, required: true }
 });
 
 const genreSchema = new mongoose.Schema({
-    name: { type: String, required: true },
-    artists: { type: [artistSchema], default: [] },
+    GENRE: { type: String, required: true },
+    ARTISTS: { type: [artistSchema], default: [] },
+}, { collection: 'ArtistData' });
+
+const Genre = mongoose.model('Genre', genreSchema);
+
+app.get('/', (req, res) => {
+    res.send('API running!');
 });
 
-const Genre = mongoose.model('Genre', genreSchema)
+app.get('/:genreName', async (req, res) => {
+    const { genreName } = req.params;
+
+    try {
+        const genre = await Genre.findOne({ GENRE: genreName });
+
+        if (!genre) {
+            return res.status(404).json({ message: 'Genre not found' });
+        }
+        
+        res.json(genre.ARTISTS);
+    } catch (error) {
+        res.status(500).json({ message: 'Error fetching artists', error });
+    }
+});
+
+const PORT = 8080;
+app.listen(PORT, () => {
+    console.log(`🚀 at PORT:${PORT}`)
+});
