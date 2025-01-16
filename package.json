@@ -13,6 +13,16 @@
     "cors": "^2.8.5",
     "dotenv": "^16.4.7",
     "express": "^4.21.2",
-    "mongoose": "^8.9.5"
-  }
+    "mongoose": "^8.9.5",
+    "ms": "^2.1.3"
+  },
+  "devDependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sundehakon/ArtistDataAPI.git"
+  },
+  "bugs": {
+    "url": "https://github.com/sundehakon/ArtistDataAPI/issues"
+  },
+  "homepage": "https://github.com/sundehakon/ArtistDataAPI#readme"
 }
