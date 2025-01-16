@@ -70,16 +70,16 @@ app.get('/ArtistData', async (req, res) => {
             filteredArtists = filteredArtists.filter(artist => artist.MEMBERS.toLowerCase() === members.toLowerCase());
         }
         if (minPopularity) {
-            filteredArtists = filteredArtists.filter(artist => artist.POPULARITY >= parseInt(minPopularity));
+            filteredArtists = filteredArtists.filter(artist => artist.POPULARITY < parseInt(minPopularity));
         }
         if (maxPopularity) {
-            filteredArtists = filteredArtists.filter(artist => artist.POPULARITY <= parseInt(maxPopularity));
+            filteredArtists = filteredArtists.filter(artist => artist.POPULARITY > parseInt(maxPopularity));
         }
         if (minDebut) {
-            filteredArtists = filteredArtists.filter(artist => artist.DEBUT >= parseInt(minDebut));
+            filteredArtists = filteredArtists.filter(artist => artist.DEBUT > parseInt(minDebut));
         }
         if (maxDebut) {
-            filteredArtists = filteredArtists.filter(artist => artist.DEBUT <= parseInt(maxDebut));
+            filteredArtists = filteredArtists.filter(artist => artist.DEBUT < parseInt(maxDebut));
         }
 
         res.json(filteredArtists);
