@@ -44,18 +44,22 @@ app.get('/', (req, res) => {
     res.send('API running!');
 });
 
-app.get('/:genreName', async (req, res) => {
-    const { genreName } = req.params;
-    const { gender, country, members, minPopularity, maxPopularity, minDebut, maxDebut } = req.query;
+app.get('/ArtistData', async (req, res) => {
+    const { genres, gender, country, members, minPopularity, maxPopularity, minDebut, maxDebut } = req.query;
+    const genreList = genres ? genres.split(',') : [];
 
     try {
-        const genre = await Genre.findOne({ GENRE: genreName });
+        const genresData = await Genre.find({ GENRE: { $in: genreList } });
 
-        if (!genre) {
-            return res.status(404).json({ message: 'Genre not found' });
+        if (!genresData || genresData.length === 0) {
+            return res.status(404).json({ message: 'Genres not found' });
         }
 
-        let filteredArtists = genre.ARTISTS;
+        let filteredArtists = [];
+        genresData.forEach((genre) => {
+            filteredArtists = [...filteredArtists, ...genre.ARTISTS];
+        });
+
         if (gender) {
             filteredArtists = filteredArtists.filter(artist => artist.GENDER.toLowerCase() === gender.toLowerCase());
         }
@@ -70,14 +74,14 @@ app.get('/:genreName', async (req, res) => {
         }
         if (maxPopularity) {
             filteredArtists = filteredArtists.filter(artist => artist.POPULARITY <= parseInt(maxPopularity));
-        }        
+        }
         if (minDebut) {
             filteredArtists = filteredArtists.filter(artist => artist.DEBUT >= parseInt(minDebut));
         }
         if (maxDebut) {
             filteredArtists = filteredArtists.filter(artist => artist.DEBUT <= parseInt(maxDebut));
         }
-        
+
         res.json(filteredArtists);
     } catch (error) {
         res.status(500).json({ message: 'Error fetching artists', error });
